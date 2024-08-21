@@ -1,26 +1,47 @@
-from turtle import Screen, Turtle
+from turtle import Screen
+from snake import Snake
+from food import Food
+from scoreboard import ScoreBoard
+import time
+
 
 screen = Screen()
-screen.setup(width=600, height=600)
+screen.setup(width=800, height=800)
 screen.bgcolor("black")
 screen.title("The Snake Game")
 screen.tracer(0)
 
-starting_positions = [(0, 0), (-20, 0), (-40, 0)]
+snake = Snake()
+food = Food()
+score = ScoreBoard()
 
-segments = []
+screen.listen()
 
-for position in starting_positions:
-    segment = Turtle("square")
-    segment.color("white")
-    segment.pu()
-    segment.goto(position)
-    segments.append(segment)
+screen.onkey(fun=snake.up, key="Up")
+screen.onkey(fun=snake.down, key="Down")
+screen.onkey(fun=snake.right, key="Right")
+screen.onkey(fun=snake.left, key="Left")
 
 game_is_on = True
+
 while game_is_on:
     screen.update()
-    for seg in segments:
-        seg.fd(20)
+    time.sleep(0.1)
+    snake.move()
+
+    if snake.head.distance(food) < 15:
+        food.refresh()
+        snake.extend()
+        score.increase()
+
+    if snake.head.xcor() > 380 or snake.head.xcor() < -380 or snake.head.ycor() > 380 or snake.head.ycor() < -380:
+        game_is_on = False
+        score.game_over()
+
+    for segment in snake.segments[1:]:
+        if snake.head.distance(segment) < 10:
+            game_is_on = False
+            score.game_over()
+
 
 screen.exitonclick()
