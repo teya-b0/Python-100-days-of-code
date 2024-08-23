@@ -5,7 +5,7 @@ class Paddle(Turtle):
     def __init__(self, location):
         super().__init__()
         self.shape("square")
-        self.speed("fastest")
+        self.speed(0)
         self.color("white")
         self.shapesize(5, 1)
         self.pu()
